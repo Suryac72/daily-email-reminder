@@ -15,7 +15,7 @@ function ReminderForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch('/reminders', {
+      const response = await fetch('https://ru8ffu9g27.execute-api.ap-south-1.amazonaws.com/prod/reminders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, message }),
