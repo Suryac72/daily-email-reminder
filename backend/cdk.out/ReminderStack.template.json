@@ -1,0 +1,945 @@
+{
+ "Resources": {
+  "EmailDetailsTableB17B2177": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "email",
+      "AttributeType": "S"
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "email",
+      "KeyType": "HASH"
+     }
+    ],
+    "ProvisionedThroughput": {
+     "ReadCapacityUnits": 5,
+     "WriteCapacityUnits": 5
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/EmailDetailsTable/Resource"
+   }
+  },
+  "ReminderApiLambdaServiceRoleD579A663": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApiLambda/ServiceRole/Resource"
+   }
+  },
+  "ReminderApiLambdaServiceRoleDefaultPolicy1EA3114F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "EmailDetailsTableB17B2177",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "ses:SendEmail",
+        "ses:SendRawEmail"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ReminderApiLambdaServiceRoleDefaultPolicy1EA3114F",
+    "Roles": [
+     {
+      "Ref": "ReminderApiLambdaServiceRoleD579A663"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApiLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ReminderApiLambda62EB98BC": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "fca86be9e19818ae56a95b91679d93bc04bd354790d4d4282f4d530cc0157be3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "EmailDetailsTableB17B2177"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "ReminderApiLambdaServiceRoleD579A663",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x"
+   },
+   "DependsOn": [
+    "ReminderApiLambdaServiceRoleDefaultPolicy1EA3114F",
+    "ReminderApiLambdaServiceRoleD579A663"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApiLambda/Resource",
+    "aws:asset:path": "asset.fca86be9e19818ae56a95b91679d93bc04bd354790d4d4282f4d530cc0157be3",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ReminderApi409DCCFC": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Name": "ReminderApi"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Resource"
+   }
+  },
+  "ReminderApiDeployment36C26C6F7bb8a708f194bca8be67b4bba3eeb2ef": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Automatically created by the RestApi construct",
+    "RestApiId": {
+     "Ref": "ReminderApi409DCCFC"
+    }
+   },
+   "DependsOn": [
+    "ReminderApiOPTIONSF51BCFF3",
+    "ReminderApiremindersOPTIONSF65A3A06",
+    "ReminderApiremindersPOSTCB34E6AF",
+    "ReminderApiremindersE706BF06"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Deployment/Resource"
+   }
+  },
+  "ReminderApiDeploymentStageprodDBBA910F": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "ReminderApiDeployment36C26C6F7bb8a708f194bca8be67b4bba3eeb2ef"
+    },
+    "RestApiId": {
+     "Ref": "ReminderApi409DCCFC"
+    },
+    "StageName": "prod"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/DeploymentStage.prod/Resource"
+   }
+  },
+  "ReminderApiOPTIONSF51BCFF3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'*'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "ReminderApi409DCCFC",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "ReminderApi409DCCFC"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Default/OPTIONS/Resource"
+   }
+  },
+  "ReminderApiremindersE706BF06": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ReminderApi409DCCFC",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "reminders",
+    "RestApiId": {
+     "Ref": "ReminderApi409DCCFC"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Default/reminders/Resource"
+   }
+  },
+  "ReminderApiremindersOPTIONSF65A3A06": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'*'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "ReminderApiremindersE706BF06"
+    },
+    "RestApiId": {
+     "Ref": "ReminderApi409DCCFC"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Default/reminders/OPTIONS/Resource"
+   }
+  },
+  "ReminderApiremindersPOSTApiPermissionReminderStackReminderApi845F8053POSTreminders34823050": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ReminderApiLambda62EB98BC",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "ReminderApi409DCCFC"
+       },
+       "/",
+       {
+        "Ref": "ReminderApiDeploymentStageprodDBBA910F"
+       },
+       "/POST/reminders"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Default/reminders/POST/ApiPermission.ReminderStackReminderApi845F8053.POST..reminders"
+   }
+  },
+  "ReminderApiremindersPOSTApiPermissionTestReminderStackReminderApi845F8053POSTremindersC69F5318": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ReminderApiLambda62EB98BC",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "ReminderApi409DCCFC"
+       },
+       "/test-invoke-stage/POST/reminders"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Default/reminders/POST/ApiPermission.Test.ReminderStackReminderApi845F8053.POST..reminders"
+   }
+  },
+  "ReminderApiremindersPOSTCB34E6AF": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "ReminderApiLambda62EB98BC",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ReminderApiremindersE706BF06"
+    },
+    "RestApiId": {
+     "Ref": "ReminderApi409DCCFC"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ReminderApi/Default/reminders/POST/Resource"
+   }
+  },
+  "SendReminderFunctionServiceRole1B302610": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/SendReminderFunction/ServiceRole/Resource"
+   }
+  },
+  "SendReminderFunctionServiceRoleDefaultPolicy3C2A3023": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ses:SendEmail",
+        "ses:SendRawEmail"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "SendReminderFunctionServiceRoleDefaultPolicy3C2A3023",
+    "Roles": [
+     {
+      "Ref": "SendReminderFunctionServiceRole1B302610"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/SendReminderFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "SendReminderFunction3CDA8570": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "3b2e0568d7f9f3ba464523c7dd6d415782ea9f8c070d391cf2ff09bc35626d13.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "SendReminderFunctionServiceRole1B302610",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x"
+   },
+   "DependsOn": [
+    "SendReminderFunctionServiceRoleDefaultPolicy3C2A3023",
+    "SendReminderFunctionServiceRole1B302610"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/SendReminderFunction/Resource",
+    "aws:asset:path": "asset.3b2e0568d7f9f3ba464523c7dd6d415782ea9f8c070d391cf2ff09bc35626d13",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "FiveMinuteSchedule35807022": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "ScheduleExpression": "cron(0/5 * * * ? *)",
+    "State": "ENABLED",
+    "Targets": [
+     {
+      "Arn": {
+       "Fn::GetAtt": [
+        "SendReminderFunction3CDA8570",
+        "Arn"
+       ]
+      },
+      "Id": "Target0"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/FiveMinuteSchedule/Resource"
+   }
+  },
+  "FiveMinuteScheduleAllowEventRuleReminderStackSendReminderFunction10AC60320F4AB75C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SendReminderFunction3CDA8570",
+      "Arn"
+     ]
+    },
+    "Principal": "events.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "FiveMinuteSchedule35807022",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/FiveMinuteSchedule/AllowEventRuleReminderStackSendReminderFunction10AC6032"
+   }
+  },
+  "ScheduleRuleDA5BD877": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "ScheduleExpression": "rate(5 minutes)",
+    "State": "ENABLED",
+    "Targets": [
+     {
+      "Arn": {
+       "Fn::GetAtt": [
+        "SendReminderFunction3CDA8570",
+        "Arn"
+       ]
+      },
+      "Id": "Target0"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ScheduleRule/Resource"
+   }
+  },
+  "ScheduleRuleAllowEventRuleReminderStackSendReminderFunction10AC6032344EA636": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SendReminderFunction3CDA8570",
+      "Arn"
+     ]
+    },
+    "Principal": "events.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "ScheduleRuleDA5BD877",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/ScheduleRule/AllowEventRuleReminderStackSendReminderFunction10AC6032"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/+1WwW7bMAz9luo4qF7TnpZbmm1Y0XUNktyCoGAsxlErS55EN/AM//sgyXYcdBvabhgwYIdA0SMfSVEk5fNk9O4iOTuBvTtNxcOpkpukXhCkDxz27q4WlYbciE1SL2GjcFWzAixJkkZfY8XGNdOQIxuzN4wzqgr/d8GaZs2nWx0oDVeQbwTcaSPw3iVfwvKx1Kk3sqoZarJVa2EHWii07c6WmmRvHfWjtEbnqKlFUiOisOF1w19v6SXcoc9nkpo1l5An9dyEBIJzZY7iMmSvsFKnsgA1SVNT9ieLOp4wCWlqPbIcNGQoZkbJVKJj41V9hFUT2+qufXwgxNLMOhdRw3NaKRGkuyutpMZext6wZwh/bfcfP2CoXR8aj7hHe8LSeMkTO09hIRYEhL7I3CCkH8F/yn4IPMbccHdxB84huWTiF+4ukssyfUC6BIerdduVST3d6q4ZAx1tLp2TRjccCpkB4R6qpJ6jo0khVzUTuIVS0dRYN7O4VTLb0W3h+c5fOChl9rdWZtLv42V76AZpZ8QR9AlBoI1QOzJaN/w9FspU/nDBo0utLPo64QwK2TUaEkh9UHd9c4ba+GwymYK6EkdX8Pt4CPbglS8IMgyhdlDX+tOtDkI+R2dKm2LIv79GHlOyqpltRd0oISqirAWkJswsDBJgBgkvaWes/OZnz3B31bE7KPCXcUaHZoNCXmM1x6+ltCjYeAvK4c/0OctDSHN0hdGu7U1HQKWbdkPR30cUz8BCjtRf77ppc3lzZOWlRvj/ZP2tZPXlGwl9/cZvgMMrXADtZmCHBd+pNhwffU8m9bwMb59LdyhKhcMm/eBVZkCEfrQfvTFgM6RDJx6xOaMgdq+wFYMsFTbN4VjBZvyteZiZvm+lzrzybUlFSQ33HzHJvXv7eH6WjEbJ6OTeSXnavvbJPK7fAXI8wQVVCQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ReminderStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "ReminderApiEndpointF0078549": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ReminderApi409DCCFC"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ReminderApiDeploymentStageprodDBBA910F"
+      },
+      "/"
+     ]
+    ]
+   }
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

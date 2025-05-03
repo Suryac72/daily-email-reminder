@@ -1,0 +1,634 @@
+{
+  "version": "41.0.0",
+  "artifacts": {
+    "ReminderStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ReminderStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ReminderStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ReminderStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/19f987106c414ed8c0d47eeb3ec5c29c2e6c5931afe3f6a8e5f43efa19bc15b9.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ReminderStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ReminderStack.assets"
+      ],
+      "metadata": {
+        "/ReminderStack/EmailDetailsTable": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "partitionKey": {
+                "name": "*",
+                "type": "S"
+              }
+            }
+          }
+        ],
+        "/ReminderStack/EmailDetailsTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EmailDetailsTableB17B2177"
+          }
+        ],
+        "/ReminderStack/EmailDetailsTable/ScalingRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "entry": "*",
+              "handler": "*",
+              "runtime": "*",
+              "environment": "*",
+              "code": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {}
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "entry": "*",
+              "handler": "*",
+              "runtime": "*",
+              "environment": "*"
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiLambdaServiceRoleD579A663"
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiLambdaServiceRoleDefaultPolicy1EA3114F"
+          }
+        ],
+        "/ReminderStack/ReminderApiLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiLambda62EB98BC"
+          }
+        ],
+        "/ReminderStack/ReminderApi": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "defaultCorsPreflightOptions": {
+                "allowOrigins": "*",
+                "allowMethods": "*",
+                "allowHeaders": "*"
+              }
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApi409DCCFC"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Deployment": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "description": "*",
+              "api": "*",
+              "retainDeployments": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToLogicalId": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiDeployment36C26C6F7bb8a708f194bca8be67b4bba3eeb2ef"
+          }
+        ],
+        "/ReminderStack/ReminderApi/DeploymentStage.prod": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "deployment": "*"
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiDeploymentStageprodDBBA910F"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiEndpointF0078549"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiOPTIONSF51BCFF3"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "parent": "*",
+              "pathPart": "*"
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiremindersE706BF06"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/OPTIONS": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": {
+                "authorizer": {
+                  "authorizerId": "*",
+                  "authorizationType": "*"
+                },
+                "apiKeyRequired": false,
+                "authorizationType": "*",
+                "methodResponses": [
+                  {
+                    "statusCode": "*",
+                    "responseParameters": "*"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addMethodResponse": [
+                {
+                  "statusCode": "*",
+                  "responseParameters": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiremindersOPTIONSF65A3A06"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/POST": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "resource": "*",
+              "httpMethod": "*",
+              "integration": "*",
+              "options": "*"
+            }
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/POST/ApiPermission.ReminderStackReminderApi845F8053.POST..reminders": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiremindersPOSTApiPermissionReminderStackReminderApi845F8053POSTreminders34823050"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/POST/ApiPermission.Test.ReminderStackReminderApi845F8053.POST..reminders": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiremindersPOSTApiPermissionTestReminderStackReminderApi845F8053POSTremindersC69F5318"
+          }
+        ],
+        "/ReminderStack/ReminderApi/Default/reminders/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ReminderApiremindersPOSTCB34E6AF"
+          }
+        ],
+        "/ReminderStack/SendReminderFunction": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "entry": "*",
+              "handler": "*",
+              "runtime": "*",
+              "code": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "entry": "*",
+              "handler": "*",
+              "runtime": "*"
+            }
+          }
+        ],
+        "/ReminderStack/SendReminderFunction/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/SendReminderFunction/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ReminderStack/SendReminderFunction/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SendReminderFunctionServiceRole1B302610"
+          }
+        ],
+        "/ReminderStack/SendReminderFunction/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/SendReminderFunction/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SendReminderFunctionServiceRoleDefaultPolicy3C2A3023"
+          }
+        ],
+        "/ReminderStack/SendReminderFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SendReminderFunction3CDA8570"
+          }
+        ],
+        "/ReminderStack/FiveMinuteSchedule": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "schedule": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEventPattern": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addTarget": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/FiveMinuteSchedule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FiveMinuteSchedule35807022"
+          }
+        ],
+        "/ReminderStack/FiveMinuteSchedule/AllowEventRuleReminderStackSendReminderFunction10AC6032": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FiveMinuteScheduleAllowEventRuleReminderStackSendReminderFunction10AC60320F4AB75C"
+          }
+        ],
+        "/ReminderStack/ScheduleRule": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "schedule": "*",
+              "targets": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEventPattern": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addTarget": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ReminderStack/ScheduleRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScheduleRuleDA5BD877"
+          }
+        ],
+        "/ReminderStack/ScheduleRule/AllowEventRuleReminderStackSendReminderFunction10AC6032": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScheduleRuleAllowEventRuleReminderStackSendReminderFunction10AC6032344EA636"
+          }
+        ],
+        "/ReminderStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ReminderStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/ReminderStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ReminderStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ReminderStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  },
+  "minimumCliVersion": "2.1005.0"
+}
